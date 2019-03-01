@@ -10,7 +10,7 @@
     <meta property="og:image" content="https://cdn.o3.network/logo/o3swap.png" />
     <meta property="og:description" content="Buy NEO, GAS and ONT with popular cryptocurrencies.">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
-    <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="./theme.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/o3-dapi-core@0.1.2/lib/o3-dapi-core.min.js"></script>
@@ -83,12 +83,12 @@
         <div class="row" v-if="done">
           <div class="col col-md-12 col-lg-6 mx-auto text-center finish">
             <p class="empty"></p>
-            <div class="ic-success"></div> 
+            <div class="ic-success"></div>
             <h1 class="finish-title">All done!</h1>
             <p class="finish">The process usually takes {{rate.transactionSpeedForecast}} minutes.<br/>Once your payment arrives, we will send the asset to your wallet. You can see the status of the order in the transaction history in O3.</p>
             <p class="finish"><strong>Reference ID: {{transaction.id}}</strong></p>
             <p class="my-3"><a class="btn btn-primary btn-block email" v-bind:href="trackingLink(transaction)"><strong>Track order status</strong></a></p>
-            <p><button class="btn btn-text-secondary btn-block" v-on:click="resetTransaction()">Start Over</button>  </p>    
+            <p><button class="btn btn-text-secondary btn-block" v-on:click="resetTransaction()">Start Over</button>  </p>
           </div>
         </div>
       </section>
@@ -135,7 +135,7 @@
               </div>
 
               <p class="form-text text-muted mb-3 red">Only send the exact amount stated above</p>
-              
+
             </div>
           </li>
 
@@ -253,7 +253,7 @@
           <span class="input-group-text" id="basic-addon2"><img v-bind:src="logo(toAsset)" height="20" class="mr-2" />{{toAsset}} ▾</span>
         </div>
       </div>
-      <p class="text-muted smaller">Please note: NEO and Ontology are indivisible so the receiving amount will always be rounded down to a whole number. 
+      <p class="text-muted smaller">Please note: NEO and Ontology are indivisible so the receiving amount will always be rounded down to a whole number.
       </p>
     </div> <!-- form-group -->
 
@@ -268,7 +268,7 @@
               <label class="checkbox-outline__label rounded p-2 mb-0"  v-bind:for="'to-' + c.symbol">
                 <img v-bind:src="logo(c.symbol)" height="24px" /> <span class="ml-1">{{c.symbol}}</span>
               </label>
-            </div> 
+            </div>
           </div> <!-- col -->
         </div> <!-- row -->
       </div> <!-- end select from currency -->
@@ -306,7 +306,7 @@
   </div>
 
 <div class="row mb-4" v-show="showQRForMobileSection == true" v-cloak>
- 
+
   <div class="col col-md-12 pl-8 col-lg-6 mx-auto text-center">
     <div id="qrForMobile"></div>
     <span class="text-white">Scan this QR code with your O3 mobile app</span>
