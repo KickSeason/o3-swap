@@ -16,6 +16,7 @@
         NEO:{name:"NEO",symbol:"NEO"},
         GAS:{name:"GAS",symbol:"GAS"},
         ONT:{name:"Ontology",symbol:"ONT"},
+        ONG:{name:"Ontology GAS",symbol:"ONG"},
       },
       fromAsset:"BTC",
       toAsset:"NEO",
@@ -63,14 +64,14 @@
         return Number(this.rate.minAmount);
       },
       availableToAssets(){
-        var list = [this.bases.NEO, this.bases.GAS, this.bases.ONT];
+        var list = [this.bases.NEO, this.bases.GAS, this.bases.ONT, this.bases.ONG];
 
         if (this.fromAsset == "BCH" || this.fromAsset == "BSV" ) {
-          list = [this.bases.NEO, this.bases.GAS];
+          list = [this.bases.NEO, this.bases.GAS, this.bases.ONG];
         } else if (this.fromAsset == "USDT" || this.fromAsset == "XRP") {
-          list = [this.bases.NEO, this.bases.ONT];
+          list = [this.bases.NEO, this.bases.ONT, this.bases.ONG];
         } else if (this.fromAsset == "NEO") {
-          list = [this.bases.GAS, this.bases.ONT];
+          list = [this.bases.GAS, this.bases.ONT, this.bases.ONG];
         } else if (this.fromAsset == "ONT") {
           list = [this.bases.NEO];
         }
