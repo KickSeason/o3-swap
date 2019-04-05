@@ -74,6 +74,8 @@
           list = [this.bases.GAS, this.bases.ONT, this.bases.ONG];
         } else if (this.fromAsset == "ONT") {
           list = [this.bases.NEO];
+        } else if (this.fromAsset == "GAS") {
+          list = [this.bases.NEO];
         }
         return list;
       },
