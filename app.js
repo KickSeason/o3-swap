@@ -37,7 +37,7 @@
     },
     computed:{
       fromNativeAsset() {
-        if (this.fromAsset == "NEO") {
+        if (this.fromAsset == "NEO" || this.fromAsset == "GAS") {
           return true;
         }
         return false;
