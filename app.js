@@ -11,7 +11,9 @@
       {name:"Bitcoin Cash",symbol:"BCH"},
       {name:"Bitcoin SV",symbol:"BSV"},
       {name:"EOS",symbol:"EOS"},
-      {name:"Tether",symbol:"USDT"}],
+      {name:"Tether",symbol:"USDT"},
+      {name:"Binance Coin",symbol:"BNB"}
+      ],
       bases:{
         NEO:{name:"NEO",symbol:"NEO"},
         GAS:{name:"GAS",symbol:"GAS"},
@@ -147,7 +149,7 @@
         this.getRate(this.pair,this.fromAmount);
       },
       logo(asset){
-        return "https://cdn.o3.network/img/cryptos/" + asset + ".png";
+        return "assets/coins/" + asset + ".png";
       },
       getRate(pair,amount){
         var self = this;
