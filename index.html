@@ -151,7 +151,7 @@
 
               <br/>
 
-              <div>
+              <div v-if="dapiProvider && dapiProvider.compatibility.includes('PAY')">
                 <div class="row small">FROM COINBASE VIA O3 PAY:</div>
                 <div class="row">
                   <button

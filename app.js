@@ -36,7 +36,8 @@
       errorMessage:null,
       viaDappBrowser:false,
       showQRForMobileSection:false,
-      eventSource:null
+      eventSource:null,
+      dapiProvider: null,
     },
     computed:{
       fromNativeAsset() {
@@ -341,8 +342,8 @@
 
       this.getRate(this.pair, this.fromAmount);
       o3dapi.initPlugins([o3dapiNeo, o3dapiPay]);
-      o3dapi.NEO.addEventListener("READY",function(){
+      o3dapi.NEO.addEventListener("READY", provider => {
+        this.dapiProvider = provider;
       });
-
     }
   });
