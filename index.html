@@ -1,5 +1,5 @@
-  <!doctype html>
-  <html lang="en">
+<!doctype html>
+<html lang="en">
   <head>
     <title>O3 Swap —  Buy NEO, GAS, ONT and ONG with popular currencies.</title>
     <link rel="shortcut icon" href="favicon.ico">
@@ -13,8 +13,9 @@
     <link rel="stylesheet" href="./theme.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/o3-dapi-core@0.1.2/lib/o3-dapi-core.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/o3-dapi-neo@0.1.1/lib/o3-dapi-neo.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/o3-dapi-core@0.3.4/lib/o3-dapi-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/o3-dapi-neo@0.4.2/lib/o3-dapi-neo.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/o3-dapi-pay@0.0.1/lib/o3-dapi-pay.min.js"></script>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
@@ -22,44 +23,50 @@
 
 
     <style type="text/css">
-    * {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+      * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
 
-    [v-cloak] {display: none}
+      [v-cloak] {
+        display: none;
+      }
 
-    .slide-fade-enter-active {
-      transition: all .3s ease;
-    }
-    .slide-fade-leave-active {
-      transition: all 0s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-    }
-    .slide-fade-enter, .slide-fade-leave-to{
-      transform: translateX(10px);
-      opacity: 0;
-    }
+      .slide-fade-enter-active {
+        transition: all .3s ease;
+      }
 
-    .fade-enter-active{
-      transition: opacity .25s;
-    }
-    .fade-leave-active {
-     transition: opacity 0s;
-   }
-   .fade-enter, .fade-leave-to{
-    opacity: 0;
-  }
-  #qrForMobile img{
-    margin: 0 auto;
-    margin-bottom: 1em;
-     padding:10px;
-   border:10px solid #fff;
-   background-color:#fff;
+      .slide-fade-leave-active {
+        transition: all 0s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+      }
 
-  }
-</style>
+      .slide-fade-enter, .slide-fade-leave-to {
+        transform: translateX(10px);
+        opacity: 0;
+      }
 
-</head>
+      .fade-enter-active{
+        transition: opacity .25s;
+      }
+
+      .fade-leave-active {
+        transition: opacity 0s;
+      }
+
+      .fade-enter, .fade-leave-to{
+        opacity: 0;
+      }
+
+      #qrForMobile img{
+        margin: 0 auto;
+        margin-bottom: 1em;
+        padding:10px;
+        border:10px solid #fff;
+        background-color:#fff;
+      }
+    </style>
+
+  </head>
 
 <body>
   <main id="app" role="main">
@@ -124,18 +131,38 @@
             </span>
             <div class="media-body mt-n1">
               <label class="mb-0 small">TO ADDRESS:</label>
-              <div id="toAddressQR" class="qrcode" style="widows: 128px;height: 152px"></div>
-              <div class="js-focus-state input-group mt-2 mb-2" v-on:click="copyAddress('payinAddress')">
-                <input type="text" id="payinAddress" class="form-control address" readonly v-model="transaction.payinAddress">
-                <div class="input-group-append" style="cursor: pointer;">
-                  <span class="input-group-text">
-                    <span class="fas fa-clone"></span>
-                  </span>
+
+              <div class="row">
+
+                <div id="toAddressQR" class="qrcode" style="widows: 128px;height: 152px"></div>
+
+                <div class="manual-send-actions col-md-6">
+                  <div class="js-focus-state input-group mt-2 mb-2" v-on:click="copyAddress('payinAddress')">
+                    <input type="text" id="payinAddress" class="form-control address" readonly v-model="transaction.payinAddress">
+                    <div class="input-group-append" style="cursor: pointer;">
+                      <span class="input-group-text">
+                        <span class="fas fa-clone"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <p class="form-text text-muted mb-3 red">Only send the exact amount stated above</p>
                 </div>
               </div>
 
-              <p class="form-text text-muted mb-3 red">Only send the exact amount stated above</p>
+              <br/>
 
+              <div>
+                <div class="row small">FROM COINBASE VIA O3 PAY:</div>
+                <div class="row">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-block mb-3 col-md-3"
+                    v-on:click="o3PaySend()"
+                  >
+                    O3 PAY
+                  </button>
+                </div>
+              </div>
             </div>
           </li>
 

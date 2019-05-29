@@ -12,7 +12,8 @@
       {name:"Bitcoin SV",symbol:"BSV"},
       {name:"EOS",symbol:"EOS"},
       {name:"Tether",symbol:"USDT"},
-      {name:"Binance Coin",symbol:"BNB"}
+      {name:"Binance Coin",symbol:"BNB"},
+      {name:"USD Coin",symbol:"USDC"},
       ],
       bases:{
         NEO:{name:"NEO",symbol:"NEO"},
@@ -192,7 +193,7 @@
         var self = this;
         var args = {
           fromAddress: from,
-          toAddress: to, 
+          toAddress: to,
           asset: asset,
           amount: amount.toString(),
           remark: "refID:" + refID,
@@ -215,7 +216,7 @@
           self.transaction = data;
           console.log(self.transaction);
           setTimeout(function(){
-            self.renderQR(self.transaction.payinAddress)  
+            self.renderQR(self.transaction.payinAddress)
           },100)
         }).catch(function(e){
           self.isCreatingTransaction = false;
@@ -292,6 +293,28 @@
               self.showQRForMobileSection = false;
           };
         }
+      },
+      o3PaySend() {
+        var self = this;
+        o3dapi.PAY.send({
+          asset: o3dapi.PAY.assets[self.fromAsset],
+          amount: self.fromAmount,
+          to: self.transaction.payinAddress,
+          description: "O3Swap:" + self.transaction.id,
+          uniqueId: "O3Swap:" + self.transaction.id,
+        })
+        .then(res => {
+          self.madeTransaction();
+        })
+        .catch(e => {
+          console.log(e);
+          if (e.type == "CONNECTION_DENIED"){
+            return;
+          }
+          if (e.type == "NO_PROVIDER"){
+            alert('Please open your O3 app to use O3 Pay.')
+          }
+        });
       }
     },
     mounted(){
@@ -317,7 +340,7 @@
       }
 
       this.getRate(this.pair, this.fromAmount);
-      o3dapi.initPlugins([o3dapiNeo]);
+      o3dapi.initPlugins([o3dapiNeo, o3dapiPay]);
       o3dapi.NEO.addEventListener("READY",function(){
       });
 
