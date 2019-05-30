@@ -67,7 +67,7 @@
         return Number(this.rate.minAmount);
       },
       o3PayAvailable(){
-        if (this.fromAsset == "USDC"){
+        if (o3dapi.PAY.assets[this.fromAsset]){
           return true;
         }
          return false;
