@@ -34,7 +34,6 @@
       isCreatingTransaction:false,
       done: false,
       errorMessage:null,
-      viaDappBrowser:false,
       showQRForMobileSection:false,
       eventSource:null,
       dapiProvider: null,
@@ -66,6 +65,12 @@
       },
       minAmount(){
         return Number(this.rate.minAmount);
+      },
+      o3PayAvailable(){
+        if (this.fromAsset == "USDC"){
+          return true;
+        }
+         return false;
       },
       availableToAssets(){
         var list = [this.bases.NEO, this.bases.GAS, this.bases.ONT, this.bases.ONG];
@@ -184,11 +189,15 @@
         });
       },
       send(){
+        var self = this;
         var toAddress = this.transaction.payinAddress;
         var asset = this.transaction.fromCurrency;
         var amount = this.fromAmount;
         var refID = this.transaction.id;
-        this.sendRequest(this.connectedAddress, toAddress, asset, amount, refID);
+        o3dapi.NEO.getAccount().then(function(account){
+          self.sendRequest(account.address, toAddress, asset, amount, refID);
+        }).catch(function(e){
+        });
       },
       sendRequest(from, to, asset, amount,refID){
         var self = this;
@@ -228,7 +237,6 @@
       getAccount(){
         var self = this;
         o3dapi.NEO.getAccount().then(function(account){
-          self.viaDappBrowser = true;
           self.connectedAddress = account.address;
         }).catch(function(e){
           console.log(e);
@@ -343,7 +351,7 @@
       this.getRate(this.pair, this.fromAmount);
       o3dapi.initPlugins([o3dapiNeo, o3dapiPay]);
       o3dapi.NEO.addEventListener("READY", provider => {
-        this.dapiProvider = provider;
+        self.dapiProvider = provider;
       });
     }
   });

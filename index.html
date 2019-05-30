@@ -1,72 +1,72 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>O3 Swap —  Buy NEO, GAS, ONT and ONG with popular currencies.</title>
-    <link rel="shortcut icon" href="favicon.ico">
-    <meta charset="utf-8">
-    <meta property="og:title" content="O3 Swap">
-    <meta property="og:type" content="website" >
-    <meta property="og:url" content="https://o3.network/swap" >
-    <meta property="og:image" content="https://cdn.o3.network/logo/o3swap.png" />
-    <meta property="og:description" content="Buy NEO, GAS, ONT and ONG with popular cryptocurrencies.">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
-    <link rel="stylesheet" href="./theme.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/o3-dapi-core@0.3.4/lib/o3-dapi-core.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/o3-dapi-neo@0.4.2/lib/o3-dapi-neo.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/o3-dapi-pay@0.0.1/lib/o3-dapi-pay.min.js"></script>
+<head>
+  <title>O3 Swap —  Buy NEO, GAS, ONT and ONG with popular currencies.</title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <meta charset="utf-8">
+  <meta property="og:title" content="O3 Swap">
+  <meta property="og:type" content="website" >
+  <meta property="og:url" content="https://o3.network/swap" >
+  <meta property="og:image" content="https://cdn.o3.network/logo/o3swap.png" />
+  <meta property="og:description" content="Buy NEO, GAS, ONT and ONG with popular cryptocurrencies.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+  <link rel="stylesheet" href="./theme.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/o3-dapi-core@0.3.4/lib/o3-dapi-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/o3-dapi-neo@0.4.2/lib/o3-dapi-neo.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/o3-dapi-pay@0.0.1/lib/o3-dapi-pay.min.js"></script>
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
-    <link rel="stylesheet" type="text/css" href="style.css">.
+  <link rel="stylesheet" type="text/css" href="style.css">.
 
 
-    <style type="text/css">
-      * {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
+  <style type="text/css">
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-      [v-cloak] {
-        display: none;
-      }
+  [v-cloak] {
+    display: none;
+  }
 
-      .slide-fade-enter-active {
-        transition: all .3s ease;
-      }
+  .slide-fade-enter-active {
+    transition: all .3s ease;
+  }
 
-      .slide-fade-leave-active {
-        transition: all 0s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-      }
+  .slide-fade-leave-active {
+    transition: all 0s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
 
-      .slide-fade-enter, .slide-fade-leave-to {
-        transform: translateX(10px);
-        opacity: 0;
-      }
+  .slide-fade-enter, .slide-fade-leave-to {
+    transform: translateX(10px);
+    opacity: 0;
+  }
 
-      .fade-enter-active{
-        transition: opacity .25s;
-      }
+  .fade-enter-active{
+    transition: opacity .25s;
+  }
 
-      .fade-leave-active {
-        transition: opacity 0s;
-      }
+  .fade-leave-active {
+    transition: opacity 0s;
+  }
 
-      .fade-enter, .fade-leave-to{
-        opacity: 0;
-      }
+  .fade-enter, .fade-leave-to{
+    opacity: 0;
+  }
 
-      #qrForMobile img{
-        margin: 0 auto;
-        margin-bottom: 1em;
-        padding:10px;
-        border:10px solid #fff;
-        background-color:#fff;
-      }
-    </style>
+  #qrForMobile img{
+    margin: 0 auto;
+    margin-bottom: 1em;
+    padding:10px;
+    border:10px solid #fff;
+    background-color:#fff;
+  }
+</style>
 
-  </head>
+</head>
 
 <body>
   <main id="app" role="main">
@@ -125,48 +125,38 @@
               </div>
             </li>
 
-            <li class="media u-indicator-vertical-dashed-item" v-if="viaDappBrowser == false || fromNativeAsset == false">
+            <li class="media u-indicator-vertical-dashed-item" v-if="dapiProvider == null || fromNativeAsset == false">
              <span class="btn btn-xs btn-icon btn-success rounded-circle mr-3">
               <span class="fas fa-check btn-icon__inner"></span>
             </span>
             <div class="media-body mt-n1">
+
               <label class="mb-0 small">TO ADDRESS:</label>
 
               <div class="row">
+                <div class="col">
 
-                <div id="toAddressQR" class="qrcode" style="widows: 128px;height: 152px"></div>
+                  <div id="toAddressQR" class="qrcode" style="widows: 128px;height: 152px"></div>
 
-                <div class="manual-send-actions col-md-6">
-                  <div class="js-focus-state input-group mt-2 mb-2" v-on:click="copyAddress('payinAddress')">
-                    <input type="text" id="payinAddress" class="form-control address" readonly v-model="transaction.payinAddress">
-                    <div class="input-group-append" style="cursor: pointer;">
-                      <span class="input-group-text">
-                        <span class="fas fa-clone"></span>
-                      </span>
+                  <div class="manual-send-actions">
+                    <div class="js-focus-state input-group mt-2 mb-2" v-on:click="copyAddress('payinAddress')">
+                      <input type="text" id="payinAddress" class="form-control address" readonly v-model="transaction.payinAddress">
+                      <div class="input-group-append" style="cursor: pointer;">
+                        <span class="input-group-text">
+                          <span class="fas fa-clone"></span>
+                        </span>
+                      </div>
                     </div>
+                    <p class="form-text text-muted mb-3 red">Only send the exact amount stated above</p>
                   </div>
-                  <p class="form-text text-muted mb-3 red">Only send the exact amount stated above</p>
-                </div>
-              </div>
 
-              <br/>
-
-              <div v-if="dapiProvider && dapiProvider.compatibility.includes('PAY')">
-                <div class="row small">FROM COINBASE VIA O3 PAY:</div>
-                <div class="row">
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-block mb-3 col-md-3"
-                    v-on:click="o3PaySend()"
-                  >
-                    O3 PAY
-                  </button>
                 </div>
               </div>
             </div>
+
           </li>
 
-        <li class="media u-indicator-vertical-dashed-item" v-if="transaction.payinExtraIdName">
+          <li class="media u-indicator-vertical-dashed-item" v-if="transaction.payinExtraIdName">
            <span class="btn btn-xs btn-icon btn-success rounded-circle mr-3">
             <span class="fas fa-check btn-icon__inner"></span>
           </span>
@@ -177,27 +167,37 @@
        </li>
 
 
-          <li class="media u-indicator-vertical-dashed-item">
-           <span class="btn btn-xs btn-icon btn-success rounded-circle mr-3">
-            <span class="fas fa-check btn-icon__inner"></span>
-          </span>
-          <div class="media-body mt-n1">
-           <label class="mb-0 small">YOU WILL RECEIVE:</label>
-           <p class="h3 mb-0 amount">{{transaction.amount}} {{toAsset}}</p>
-         </div>
-       </li>
+       <li class="media u-indicator-vertical-dashed-item">
+         <span class="btn btn-xs btn-icon btn-success rounded-circle mr-3">
+          <span class="fas fa-check btn-icon__inner"></span>
+        </span>
+        <div class="media-body mt-n1">
+         <label class="mb-0 small">YOU WILL RECEIVE:</label>
+         <p class="h3 mb-0 amount">{{transaction.amount}} {{toAsset}}</p>
+       </div>
+     </li>
 
-     </ul>
-   </div>
+   </ul>
  </div>
+</div>
 
- <div class="row mt-3">
+<div class="row mt-3">
+  <div class="col col-md-6 mx-auto pl-8 text-center">
 
-  <div class="col col-md-6 mx-auto pl-8">
-    <button v-if="viaDappBrowser && fromNativeAsset" type="button" class="btn btn-success btn-block mb-3" v-on:click="send()">Send with O3</button>
-    <button v-if="viaDappBrowser == false || fromNativeAsset == false" type="button" class="btn btn-success btn-block mb-3" v-on:click="madeTransaction()">I have made the transaction</button>
-    <button type="button" class="btn btn-text btn-text-secondary btn-block" v-on:click="resetTransaction()">Cancel order</button>
+   <div v-if="dapiProvider && dapiProvider.compatibility.includes('PAY') && o3PayAvailable">
+    <button type="button" class="btn btn-primary btn-block mb-3" v-on:click="o3PaySend()">
+      SEND FROM COINBASE VIA O3 PAY
+    </button>
+    <p class="small">— or —</p>
   </div>
+
+  <button v-if="dapiProvider && fromNativeAsset" type="button" class="btn btn-success btn-block mb-3" v-on:click="send()">Send with O3</button>
+
+  <button v-if="dapiProvider == null || fromNativeAsset == false" type="button" class="btn btn-success btn-block mb-3" v-on:click="madeTransaction()">I have made the transaction manuall</button>
+
+  <button type="button" class="btn btn-text btn-text-secondary btn-block" v-on:click="resetTransaction()">Cancel order</button>
+
+</div>
 </div>
 
 </section> <!-- section transaction -->
@@ -237,7 +237,7 @@
                     <img src="https://cdn.o3.network/img/neo/NEO.png" height="24px" /> <span class="ml-1">NEO</span>
                   </label>
                 </div>
-                 <div class="custom-control custom-radio custom-control-inline checkbox-outline currency-button mr-1 mb-1">
+                <div class="custom-control custom-radio custom-control-inline checkbox-outline currency-button mr-1 mb-1">
                   <input type="radio" id="from-gas" value="GAS" v-model="fromAsset" name="fromCurrency" class="custom-control-input checkbox-outline__input">
                   <label class="checkbox-outline__label rounded p-2 mb-0" for="from-gas">
                     <img src="https://cdn.o3.network/img/neo/GAS.png" height="24px" /> <span class="ml-1">GAS</span>
@@ -332,11 +332,11 @@
 </div> <!-- col -->
 </div> <!-- row -->
 
- <div class="row"  v-show="showQRForMobileSection == true" v-cloak>
-    <div class="col col-md-12 pl-8 col-lg-6 mx-auto text-right">
-      <button class="btn btn-light btn-xs" v-on:click="closeQRSection()">✖</button>
-    </div>
+<div class="row"  v-show="showQRForMobileSection == true" v-cloak>
+  <div class="col col-md-12 pl-8 col-lg-6 mx-auto text-right">
+    <button class="btn btn-light btn-xs" v-on:click="closeQRSection()">✖</button>
   </div>
+</div>
 
 <div class="row mb-4" v-show="showQRForMobileSection == true" v-cloak>
 
