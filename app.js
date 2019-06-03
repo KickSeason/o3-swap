@@ -12,7 +12,8 @@
       {name:"Bitcoin SV",symbol:"BSV"},
       {name:"EOS",symbol:"EOS"},
       {name:"Tether",symbol:"USDT"},
-      {name:"Binance Coin",symbol:"BNB"}
+      {name:"Binance Coin",symbol:"BNB"},
+      {name:"USD Coin",symbol:"USDC"},
       ],
       bases:{
         NEO:{name:"NEO",symbol:"NEO"},
@@ -33,9 +34,9 @@
       isCreatingTransaction:false,
       done: false,
       errorMessage:null,
-      viaDappBrowser:false,
       showQRForMobileSection:false,
-      eventSource:null
+      eventSource:null,
+      dapiProvider: null,
     },
     computed:{
       fromNativeAsset() {
@@ -64,6 +65,12 @@
       },
       minAmount(){
         return Number(this.rate.minAmount);
+      },
+      o3PayAvailable(){
+        if (o3dapi.PAY.assets[this.fromAsset]){
+          return true;
+        }
+         return false;
       },
       availableToAssets(){
         var list = [this.bases.NEO, this.bases.GAS, this.bases.ONT, this.bases.ONG];
@@ -182,17 +189,21 @@
         });
       },
       send(){
+        var self = this;
         var toAddress = this.transaction.payinAddress;
         var asset = this.transaction.fromCurrency;
         var amount = this.fromAmount;
         var refID = this.transaction.id;
-        this.sendRequest(this.connectedAddress, toAddress, asset, amount, refID);
+        o3dapi.NEO.getAccount().then(function(account){
+          self.sendRequest(account.address, toAddress, asset, amount, refID);
+        }).catch(function(e){
+        });
       },
       sendRequest(from, to, asset, amount,refID){
         var self = this;
         var args = {
           fromAddress: from,
-          toAddress: to, 
+          toAddress: to,
           asset: asset,
           amount: amount.toString(),
           remark: "refID:" + refID,
@@ -215,7 +226,7 @@
           self.transaction = data;
           console.log(self.transaction);
           setTimeout(function(){
-            self.renderQR(self.transaction.payinAddress)  
+            self.renderQR(self.transaction.payinAddress)
           },100)
         }).catch(function(e){
           self.isCreatingTransaction = false;
@@ -226,7 +237,6 @@
       getAccount(){
         var self = this;
         o3dapi.NEO.getAccount().then(function(account){
-          self.viaDappBrowser = true;
           self.connectedAddress = account.address;
         }).catch(function(e){
           console.log(e);
@@ -292,6 +302,28 @@
               self.showQRForMobileSection = false;
           };
         }
+      },
+      o3PaySend() {
+        var self = this;
+        o3dapi.PAY.send({
+          asset: o3dapi.PAY.assets[self.fromAsset],
+          amount: self.fromAmount,
+          to: self.transaction.payinAddress,
+          description: "O3Swap:" + self.transaction.id,
+          uniqueId: "O3Swap:" + self.transaction.id,
+        })
+        .then(res => {
+          self.madeTransaction();
+        })
+        .catch(e => {
+          console.log(e);
+          if (e.type == "CONNECTION_DENIED"){
+            return;
+          }
+          if (e.type == "NO_PROVIDER"){
+            alert('Please open your O3 app to use O3 Pay.')
+          }
+        });
       }
     },
     mounted(){
@@ -317,9 +349,9 @@
       }
 
       this.getRate(this.pair, this.fromAmount);
-      o3dapi.initPlugins([o3dapiNeo]);
-      o3dapi.NEO.addEventListener("READY",function(){
+      o3dapi.initPlugins([o3dapiNeo, o3dapiPay]);
+      o3dapi.NEO.addEventListener("READY", provider => {
+        self.dapiProvider = provider;
       });
-
     }
   });
