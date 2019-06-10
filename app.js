@@ -67,7 +67,11 @@
         return Number(this.rate.minAmount);
       },
       o3PayAvailable(){
-        if (o3dapi.PAY.assets[this.fromAsset]){
+        if (
+          this.dapiProvider &&
+          this.dapiProvider.compatibility.includes('PAY') &&
+          o3dapi.PAY.assets[this.fromAsset]
+        ){
           return true;
         }
          return false;
