@@ -324,7 +324,14 @@
             alert('Please open your O3 app to use O3 Pay.')
           }
         });
-      }
+      },
+      getProvider(){
+        var self = this;
+        o3dapi.NEO.getProvider()
+        .then(function(provider){
+          self.dapiProvider = provider;
+        })
+      },
     },
     mounted(){
       var self = this;
@@ -351,7 +358,7 @@
       this.getRate(this.pair, this.fromAmount);
       o3dapi.initPlugins([o3dapiNeo, o3dapiPay]);
       o3dapi.NEO.addEventListener("READY", provider => {
-        self.dapiProvider = provider;
+        this.getProvider();
       });
     }
   });
