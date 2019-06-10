@@ -184,7 +184,7 @@
 <div class="row mt-3">
   <div class="col col-md-6 mx-auto pl-8 text-center">
 
-   <div v-if="dapiProvider && dapiProvider.compatibility.includes('PAY') && o3PayAvailable">
+   <div v-if="dapiProvider && o3PayAvailable">
     <button type="button" class="btn btn-primary btn-block mb-3" v-on:click="o3PaySend()">
       SEND FROM COINBASE VIA O3 PAY
     </button>
