@@ -3,17 +3,17 @@
     data: {
       connectedAddress:"",
       availableFromAssets:[
-      {name:"Bitcoin",symbol:"BTC"},
-      {name:"Ethereum",symbol:"ETH"},
-      {name:"Ripple",symbol:"XRP"},
-      {name:"Litecoin",symbol:"LTC"},
-      {name:"Stellar",symbol:"XLM"},
-      {name:"Bitcoin Cash",symbol:"BCH"},
-      {name:"Bitcoin SV",symbol:"BSV"},
-      {name:"EOS",symbol:"EOS"},
-      {name:"Tether",symbol:"USDT"},
-      {name:"Binance Coin",symbol:"BNB"},
-      {name:"USD Coin",symbol:"USDC"},
+        {name:"Bitcoin",symbol:"BTC"},
+        {name:"Ethereum",symbol:"ETH"},
+        {name:"Ripple",symbol:"XRP"},
+        {name:"Litecoin",symbol:"LTC"},
+        {name:"Stellar",symbol:"XLM"},
+        {name:"Bitcoin Cash",symbol:"BCH"},
+        {name:"Bitcoin SV",symbol:"BSV"},
+        {name:"EOS",symbol:"EOS"},
+        {name:"Tether",symbol:"USDT"},
+        {name:"Binance Coin",symbol:"BNB"},
+        {name:"USD Coin",symbol:"USDC"},
       ],
       bases:{
         NEO:{name:"NEO",symbol:"NEO"},
@@ -21,6 +21,7 @@
         ONT:{name:"Ontology",symbol:"ONT"},
         ONG:{name:"Ontology GAS",symbol:"ONG"},
         BTC:{name:"Bitcion",symbol:"BTC"},
+        USDC:{name:"USD Coin",symbol:"USDC"},
       },
       fromAsset:"BTC",
       toAsset:"NEO",
@@ -41,7 +42,7 @@
     },
     computed:{
       fromNativeAsset() {
-        if (this.fromAsset == "NEO" || this.fromAsset == "GAS") {
+        if (this.fromAsset == "NEO") {
           return true;
         }
         return false;
@@ -78,18 +79,12 @@
          return false;
       },
       availableToAssets(){
-        var list = [this.bases.NEO, this.bases.GAS, this.bases.ONT, this.bases.ONG, this.bases.BTC];
+        var list = [this.bases.NEO, this.bases.GAS, this.bases.ONT, this.bases.ONG, this.bases.BTC, this.bases.USDC];
 
-        if (this.fromAsset == "BCH" || this.fromAsset == "BSV" ) {
-          list = [this.bases.NEO, this.bases.GAS, this.bases.ONG];
-        } else if (this.fromAsset == "USDT" || this.fromAsset == "XRP") {
+        if (this.fromAsset == "USDT" || this.fromAsset == "XRP") {
           list = [this.bases.NEO, this.bases.ONT, this.bases.ONG];
         } else if (this.fromAsset == "NEO") {
-          list = [this.bases.GAS, this.bases.ONT, this.bases.ONG, this.bases.BTC];
-        } else if (this.fromAsset == "ONT") {
-          list = [this.bases.NEO];
-        } else if (this.fromAsset == "GAS") {
-          list = [this.bases.NEO];
+          list = [this.bases.GAS, this.bases.ONT, this.bases.ONG, this.bases.BTC, this.bases.USDC];
         }
         return list;
       },
@@ -121,7 +116,14 @@
     },
     methods:{
       connectWithO3(){
-        this.getAccount();
+        if (
+          this.toAsset === this.bases.BTC.symbol ||
+          this.toAsset === this.bases.USDC.symbol
+        ) {
+          this.getPayAccount()
+        } else {
+          this.getAccount();
+        }
       },
       containsSymbol(a, obj) {
         var i = a.length;
@@ -213,7 +215,7 @@
           amount: amount.toString(),
           remark: "refID:" + refID,
           network: "MainNet",
-          fee:"0"
+          fee:"0.0011"
         };
         o3dapi.NEO.send(args).then(function(data){
           self.madeTransaction();
@@ -244,6 +246,24 @@
         o3dapi.NEO.getAccount().then(function(account){
           self.connectedAddress = account.address;
         }).catch(function(e){
+          console.log(e);
+          if (e.type == "CONNECTION_DENIED"){
+            return;
+          }
+          self.showQRForMobileSection = true;
+          self.showQRForMobile();
+        });
+      },
+      getPayAccount(){
+        var self = this;
+        const params = {
+          asset: o3dapi.PAY.assets[this.toAsset],
+        };
+        o3dapi.PAY.getAccount(params)
+        .then(account => {
+          self.connectedAddress = account.address;
+        })
+        .catch(function(e){
           console.log(e);
           if (e.type == "CONNECTION_DENIED"){
             return;
