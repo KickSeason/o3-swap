@@ -73,61 +73,51 @@ var app = new Vue({
   },
   computed:{
     fromNativeAsset() {
-      if (this.fromAsset == "NEO") {
-        return true;
-      }
-      return false;
+      return this.fromAsset === "NEO";
     },
-    ratePerOne(){
+    ratePerOne() {
       return this.rate.estimatedAmount / this.fromAmount;
     },
-    toAmount(){
-      if (this.isLoadingRate) {
-        return 0;
-      }
-      if (this.fromAsset == this.toAsset) {
-        return 0;
-      }
-      if (this.rate.estimatedAmount == null) {
+    toAmount() {
+      if (
+        this.isLoadingRate ||
+        this.fromAsset == this.toAsset ||
+        this.rate.estimatedAmount == null
+      ) {
         return 0;
       }
       return this.rate.estimatedAmount;
     },
-    pair(){
+    pair() {
       return this.fromAsset + "_" + this.toAsset;
     },
-    minAmount(){
+    minAmount() {
       return Number(this.rate.minAmount);
     },
-    o3PayAvailable(){
-      if (
-        this.dapiProvider &&
-        this.dapiProvider.compatibility.includes('PAY') &&
-        o3dapi.PAY.assets[this.fromAsset]
-      ){
-        return true;
-      }
-       return false;
+    o3PayAvailable() {
+      return this.dapiProvider &&
+      this.dapiProvider.compatibility.includes('PAY') &&
+      o3dapi.PAY.assets[this.fromAsset];
     },
-    availableToAssets(){
+    availableToAssets() {
       return this.toAssetPairs[this.fromAsset];
     },
   },
   watch:{
-    connectedAddress(value){
+    connectedAddress(value) {
       this.errorMessage = null;
     },
-    fromAmount(value){
+    fromAmount(value) {
       clearTimeout(this.typingTimer);
       this.typingTimer = setTimeout(() => {
-        if (value==="" ) {
+        if (value === "") {
           return
         }
         this.getRate(this.pair, value);
       }, this.doneTypingInterval);
 
     },
-    toAsset(value){
+    toAsset(value) {
       this.getRate(this.pair,this.fromAmount);
       this.selectToCurrency = false;
     },
@@ -137,7 +127,7 @@ var app = new Vue({
     }
   },
   methods:{
-    connectWithO3(){
+    connectWithO3() {
       if (
         this.toAsset === this.assets.BTC.symbol ||
         this.toAsset === this.assets.USDC.symbol
@@ -147,13 +137,13 @@ var app = new Vue({
         this.getAccount();
       }
     },
-    madeTransaction(){
+    madeTransaction() {
       this.done = true;
     },
-    trackingLink(transaction){
+    trackingLink(transaction) {
       return "https://changenow.io/exchange/txs/" + transaction.id;
     },
-    emailBody(transaction){
+    emailBody(transaction) {
       var subject = "Transaction on O3 Swap. Reference ID: " + transaction.id;
       var body = "Sending: " +  this.fromAmount + "" + this.fromAsset + "%0D%0A";
       body = body + "To address: " +  transaction.payinAddress + "%0D%0A";
@@ -162,30 +152,30 @@ var app = new Vue({
       body = body + "Status: https://changenow.io/exchange/txs/" +  transaction.id + "%0D%0A";
       return "mailto:?body=" + body + "&subject=" + subject;
     },
-    selectCurrency(target){
-      if (target == "from"){
+    selectCurrency(target) {
+      if (target == "from") {
         this.selectFromCurrency = !this.selectFromCurrency
       }  else if (target =='to') {
         this.selectToCurrency = !this.selectToCurrency
       }
     },
-    resetTransaction(){
+    resetTransaction() {
       this.done = false;
       this.rate = {};
       this.transaction = null;
       this.getRate(this.pair,this.fromAmount);
     },
-    logo(asset){
+    logo(asset) {
       return "assets/coins/" + asset + ".png";
     },
-    getRate(pair,amount){
+    getRate(pair,amount) {
       if (this.fromAsset == this.toAsset) {
         this.rate = {};
         return
       }
       this.isLoadingRate = true;
       axios.get("https://platform.o3.network/public/api/xchange/rate/" + amount + "/" + pair,  {withCredentials: true, credentials: 'same-origin'})
-      .then((response) => {
+      .then(response => {
         this.isLoadingRate = false;
         var data = response.data.result.data;
         this.rate = data;
@@ -197,7 +187,7 @@ var app = new Vue({
       document.execCommand("copy");
       alert("Copied " + this.transaction.payinAddress + " to clipboard.")
     },
-    renderQR(text){
+    renderQR(text) {
       var qrcode = new QRCode(document.getElementById("toAddressQR"), {
         text: text,
         width: 128,
@@ -219,7 +209,7 @@ var app = new Vue({
       })
       .catch(e => {});
     },
-    sendRequest(from, to, asset, amount,refID){
+    sendRequest(from, to, asset, amount, refID) {
       var args = {
         fromAddress: from,
         toAddress: to,
@@ -234,7 +224,7 @@ var app = new Vue({
       .then(data => this.madeTransaction())
       .catch(e => console.log(e));
     },
-    createTX(tx){
+    createTX(tx) {
       this.isCreatingTransaction = true;
       axios.post("https://platform.o3.network/public/api/xchange/transactions", tx)
       .then(response => {
@@ -249,7 +239,7 @@ var app = new Vue({
         this.errorMessage = e.response.data.error.message;
       });
     },
-    getAccount(){
+    getAccount() {
       o3dapi.NEO.getAccount()
       .then(account => {
         this.connectedAddress = account.address;
@@ -263,7 +253,7 @@ var app = new Vue({
         this.showQRForMobile();
       });
     },
-    getPayAccount(){
+    getPayAccount() {
       const params = {
         asset: o3dapi.PAY.assets[this.toAsset],
       };
@@ -280,7 +270,7 @@ var app = new Vue({
         this.showQRForMobile();
       });
     },
-    toCreateTX(){
+    toCreateTX() {
       if (this.fromAmount < this.minAmount){
         alert("The sending amount must be greater than " + this.minAmount);
         return
@@ -298,14 +288,14 @@ var app = new Vue({
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         )
     },
-    openO3Desktop(){
+    openO3Desktop() {
       window.location.href= "o3network://";
     },
-    closeQRSection(){
+    closeQRSection() {
       this.eventSource.close();
       this.showQRForMobileSection = false;
     },
-    showQRForMobile(){
+    showQRForMobile() {
       var id = this.uuidv4();
       var qrText = "o3://channel/" + id;
       document.getElementById("qrForMobile").innerHTML = "";
@@ -353,14 +343,14 @@ var app = new Vue({
         }
       });
     },
-    getProvider(){
+    getProvider() {
       o3dapi.NEO.getProvider()
       .then(provider => {
         this.dapiProvider = provider;
       })
     },
   },
-  mounted(){
+  mounted() {
     var hash = window.location.hash;
     hash = hash.replace("#","")
     if (hash != "" && hash.includes("_")){
@@ -379,8 +369,6 @@ var app = new Vue({
 
     this.getRate(this.pair, this.fromAmount);
     o3dapi.initPlugins([o3dapiNeo, o3dapiPay]);
-    o3dapi.NEO.addEventListener("READY", provider => {
-      this.getProvider();
-    });
+    o3dapi.NEO.addEventListener("READY", provider => this.getProvider());
   }
 });
