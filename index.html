@@ -312,7 +312,7 @@
     <label class="small" for="send-form title2">AT THIS ADDRESS:</label>
     <div class="input-group">
       <input type="text" v-model="connectedAddress" class="form-control address">
-      <div class="input-group-append ht" style="cursor: pointer;" v-on:click="connectWithO3()" >
+      <div v-if="toNativeAsset || (!toNativeAsset && o3PayReceiveAvailable)" class="input-group-append ht" style="cursor: pointer;" v-on:click="connectWithO3()" >
         <span class="input-group-text"><img src="assets/connect.png" srcset="assets/connect@2x.png 2x" / ></span>
       </div>
     </div>

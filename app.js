@@ -26,25 +26,25 @@ var app = new Vue({
     assets: Object.assign({}, externalAssets, nativeAssets),
     availableFromAssets: Object.values(externalAssets),
     toAssetPairs:{
-      BTC: nativeAssets,
-      ETH: nativeAssets,
+      BTC: Object.values(nativeAssets),
+      ETH: Object.values(nativeAssets),
       XRP: [
         nativeAssets.NEO,
         nativeAssets.ONT,
         nativeAssets.ONG,
       ],
-      LTC: nativeAssets,
-      XLM: nativeAssets,
-      BCH: nativeAssets,
-      BSV: nativeAssets,
-      EOS: nativeAssets,
+      LTC: Object.values(nativeAssets),
+      XLM: Object.values(nativeAssets),
+      BCH: Object.values(nativeAssets),
+      BSV: Object.values(nativeAssets),
+      EOS: Object.values(nativeAssets),
       USDT: [
         nativeAssets.NEO,
         nativeAssets.ONT,
         nativeAssets.ONG,
       ],
-      BNB: nativeAssets,
-      USDC: nativeAssets,
+      BNB: Object.values(nativeAssets),
+      USDC: Object.values(nativeAssets),
       NEO: [
         nativeAssets.GAS,
         nativeAssets.ONT,
@@ -75,6 +75,9 @@ var app = new Vue({
     fromNativeAsset() {
       return this.fromAsset === "NEO";
     },
+    toNativeAsset() {
+      return Boolean(nativeAssets[this.toAsset]);
+    },
     ratePerOne() {
       return this.rate.estimatedAmount / this.fromAmount;
     },
@@ -102,6 +105,11 @@ var app = new Vue({
     availableToAssets() {
       return this.toAssetPairs[this.fromAsset];
     },
+    o3PayReceiveAvailable() {
+      return this.dapiProvider &&
+      this.dapiProvider.compatibility.includes('PAY') &&
+      compareVersions('3.0.0', this.dapiProvider.version) !== 1
+    }
   },
   watch:{
     connectedAddress(value) {
@@ -124,6 +132,9 @@ var app = new Vue({
     fromAsset(value) {
       this.getRate(this.pair, this.fromAmount);
       this.selectFromCurrency = false;
+      if (!this.toAssetPairs[this.fromAsset].includes(({symbol}) => symbol === this.toAsset)) {
+        this.toAsset = this.toAssetPairs[this.fromAsset][0].symbol;
+      }
     }
   },
   methods:{
@@ -362,7 +373,7 @@ var app = new Vue({
         this.fromAsset = from;
       }
 
-      if (toAssetPairs[from].includes(({name}) => name === to)) {
+      if (toAssetPairs[from].includes(({symbol}) => symbol === to)) {
         this.toAsset = to;
       }
     }
@@ -372,3 +383,41 @@ var app = new Vue({
     o3dapi.NEO.addEventListener("READY", provider => this.getProvider());
   }
 });
+
+function compareVersions(v1, v2) {
+  if (!v1 || !v2) {
+    return -1;
+  }
+  let v1parts = v1.split('.');
+  let v2parts = v2.split('.');
+
+  function isValidPart(x) {
+    return /^\d+$/.test(x);
+  }
+
+  if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
+    return NaN;
+  }
+
+  for (let i = 0; i < v1parts.length; ++i) {
+    if (v2parts.length == i) {
+      return 1;
+    }
+
+    if (v1parts[i] == v2parts[i]) {
+      continue;
+    }
+
+    if (v1parts[i] > v2parts[i]) {
+      return 1;
+    }
+
+    return -1;
+  }
+
+  if (v1parts.length != v2parts.length) {
+    return -1;
+  }
+
+  return 0;
+}
