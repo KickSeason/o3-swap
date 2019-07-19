@@ -13,9 +13,9 @@
   <link rel="stylesheet" href="./theme.min.css">
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/o3-dapi-core@0.3.4/lib/o3-dapi-core.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/o3-dapi-neo@0.4.2/lib/o3-dapi-neo.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/o3-dapi-pay@0.0.1/lib/o3-dapi-pay.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/o3-dapi-core@0.3.7/lib/o3-dapi-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/o3-dapi-neo@0.6.0/lib/o3-dapi-neo.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/o3-dapi-pay@0.2.0/lib/o3-dapi-pay.min.js"></script>
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
@@ -126,7 +126,7 @@
               </div>
             </li>
 
-            <li class="media u-indicator-vertical-dashed-item" v-if="dapiProvider == null || fromNativeAsset == false">
+            <li class="media u-indicator-vertical-dashed-item">
              <span class="btn btn-xs btn-icon btn-success rounded-circle mr-3">
               <span class="fas fa-check btn-icon__inner"></span>
             </span>
@@ -153,7 +153,6 @@
                 </div>
               </div>
             </div>
-
           </li>
 
           <li class="media u-indicator-vertical-dashed-item" v-if="transaction.payinExtraIdName">
@@ -184,7 +183,7 @@
 <div class="row mt-3">
   <div class="col col-md-6 mx-auto pl-8 text-center">
 
-   <div v-if="dapiProvider && o3PayAvailable">
+   <div v-if="dapiProvider && o3PayAvailable && !fromNativeAsset">
     <button type="button" class="btn btn-primary btn-block mb-3" v-on:click="o3PaySend()">
       SEND FROM COINBASE VIA O3 PAY
     </button>
@@ -235,12 +234,6 @@
                   <input type="radio" id="from-neo" value="NEO" v-model="fromAsset" name="fromCurrency" class="custom-control-input checkbox-outline__input">
                   <label class="checkbox-outline__label rounded p-2 mb-0" for="from-neo">
                     <img src="https://cdn.o3.network/img/neo/NEO.png" height="24px" /> <span class="ml-1">NEO</span>
-                  </label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline checkbox-outline currency-button mr-1 mb-1">
-                  <input type="radio" id="from-gas" value="GAS" v-model="fromAsset" name="fromCurrency" class="custom-control-input checkbox-outline__input">
-                  <label class="checkbox-outline__label rounded p-2 mb-0" for="from-gas">
-                    <img src="https://cdn.o3.network/img/neo/GAS.png" height="24px" /> <span class="ml-1">GAS</span>
                   </label>
                 </div>
               </div>
@@ -319,7 +312,7 @@
     <label class="small" for="send-form title2">AT THIS ADDRESS:</label>
     <div class="input-group">
       <input type="text" v-model="connectedAddress" class="form-control address">
-      <div class="input-group-append ht" style="cursor: pointer;" v-on:click="connectWithO3()" >
+      <div v-if="toNativeAsset || (!toNativeAsset && o3PayReceiveAvailable)" class="input-group-append ht" style="cursor: pointer;" v-on:click="connectWithO3()" >
         <span class="input-group-text"><img src="assets/connect.png" srcset="assets/connect@2x.png 2x" / ></span>
       </div>
     </div>
