@@ -288,7 +288,6 @@
         <h6 class="text-uppercase small">Select a currency</h6>
         <div class="row">
           <div class="col">
-            <p class="mb-0 small">Native to O3</p>
             <div class="custom-control custom-radio custom-control-inline checkbox-outline mr-1 mb-1 currency-button" v-for="c in availableToAssets">
               <input type="radio" v-bind:id="'to-' + c.symbol" v-bind:value="c.symbol" v-model="toAsset" name="toCurrency" class="custom-control-input checkbox-outline__input">
               <label class="checkbox-outline__label rounded p-2 mb-0"  v-bind:for="'to-' + c.symbol">
