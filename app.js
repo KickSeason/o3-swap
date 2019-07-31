@@ -79,7 +79,7 @@ var app = new Vue({
   },
   computed:{
     fromNativeAsset() {
-      return this.fromAsset === "NEO";
+      return this.fromAsset === "NEO" || this.fromAsset === "GAS";
     },
     toNativeAsset() {
       return Boolean(nativeAssets[this.toAsset]);
@@ -138,7 +138,7 @@ var app = new Vue({
     fromAsset(value) {
       this.getRate(this.pair, this.fromAmount);
       this.selectFromCurrency = false;
-      if (!this.toAssetPairs[this.fromAsset].includes(({symbol}) => symbol === this.toAsset)) {
+      if (!this.toAssetPairs[this.fromAsset].find(({symbol}) => symbol === this.toAsset)) {
         this.toAsset = this.toAssetPairs[this.fromAsset][0].symbol;
       }
     }
@@ -185,7 +185,7 @@ var app = new Vue({
     logo(asset) {
       return "assets/coins/" + asset + ".png";
     },
-    getRate(pair,amount) {
+    getRate(pair, amount) {
       if (this.fromAsset == this.toAsset) {
         this.rate = {};
         return
@@ -375,11 +375,11 @@ var app = new Vue({
       var from = pair[0].toUpperCase();
       var to = pair[1].toUpperCase();
 
-      if (externalAssets[from] || from === 'NEO') {
+      if (externalAssets[from] || from === 'NEO' || from === 'GAS') {
         this.fromAsset = from;
       }
 
-      if (toAssetPairs[from].includes(({symbol}) => symbol === to)) {
+      if (this.toAssetPairs[from].find(({symbol}) => symbol === to)) {
         this.toAsset = to;
       }
     }
