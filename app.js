@@ -53,6 +53,12 @@ var app = new Vue({
         externalAssets.USDC,
         externalAssets.ETH,
       ],
+      GAS: [
+        nativeAssets.NEO,
+        externalAssets.BTC,
+        externalAssets.USDC,
+        externalAssets.ETH,
+      ],
     },
     fromAsset:"BTC",
     toAsset:"NEO",
