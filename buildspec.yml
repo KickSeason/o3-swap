@@ -1,0 +1,14 @@
+version: 0.2
+env:
+  variables:
+    BUCKET_NAME: "swap.o3.app"
+    DISTRIBUTION_ID: "E33MHOKZZK571E"
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  build:
+    commands:
+      - aws s3 sync . "s3://${BUCKET_NAME}" --delete
+      - aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths "/*"
