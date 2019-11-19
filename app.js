@@ -191,7 +191,7 @@ var app = new Vue({
         return
       }
       this.isLoadingRate = true;
-      axios.get("https://public.testo3.net/api/xchange/rate/" + amount + "/" + pair,  {withCredentials: true, credentials: 'same-origin'})
+      axios.get("https://platform.testo3.net/public/api/xchange/rate/" + amount + "/" + pair,  {withCredentials: true, credentials: 'same-origin'})
       .then(response => {
         this.isLoadingRate = false;
         var data = response.data.result.data;
@@ -243,7 +243,7 @@ var app = new Vue({
     },
     createTX(tx) {
       this.isCreatingTransaction = true;
-      axios.post("https://public.testo3.net/api/xchange/transactions", tx)
+      axios.post("https://platform.testo3.net/public/api/xchange/transactions", tx)
       .then(response => {
         this.isCreatingTransaction = false;
         var data = response.data.result.data;
@@ -327,7 +327,7 @@ var app = new Vue({
 
 
       if(typeof(EventSource) !== "undefined") {
-        var endpoint ="https://api.testo3.net/v1/channel/" + id
+        var endpoint ="https://platform.testo3.net/api/v1/channel/" + id
         this.eventSource = new EventSource(endpoint, {withCredentials: false});
         this.eventSource.onmessage = event => {
           var data = JSON.parse(event.data);
