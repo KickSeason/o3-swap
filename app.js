@@ -224,7 +224,7 @@ var app = new Vue({
       .then(account => {
         this.sendRequest(account.address, toAddress, asset, amount, refID);
       })
-      .catch(e => {});
+      .catch(e => {alert(e.description ? e.description : 'error')});
     },
     sendRequest(from, to, asset, amount, refID) {
       var args = {
@@ -239,7 +239,7 @@ var app = new Vue({
 
       o3dapi.NEO.send(args)
       .then(data => this.madeTransaction())
-      .catch(e => console.log(e));
+      .catch(e => {alert(e.description ? e.description : 'error')});
     },
     createTX(tx) {
       this.isCreatingTransaction = true;
